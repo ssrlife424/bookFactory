@@ -1,7 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Signup() {
   const {
@@ -9,14 +11,42 @@ function Signup() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
+
+
+  const onSubmit = async (data) => {
+    const userInfo = {
+      fullname: data.fullname,
+      email: data.email,
+      password: data.password,
+    };
+    axios
+      .post("http://localhost:4001/user/signup", userInfo)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data) {
+          toast.success("Signedin SuccessFully!!!");
+          navigate(from, { replace: true });
+
+        }
+        localStorage.setItem("Users", JSON.stringify(res.data));
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err);
+          toast.error("Error:" + err.response.data.message);
+        }
+      });
+  };
+
   return (
     <>
       <div className="flex items-center justify-center h-screen">
-        <div id="" className="w-[600px]">
+        <div className="w-[600px]">
           <div className="modal-box">
             <form onSubmit={handleSubmit(onSubmit)} method="dialog">
-              {/* if there is a button in form, it will close the modal */}
               <Link
                 to="/"
                 className="absolute btn btn-sm btn-circle btn-ghost right-2 top-2"
@@ -32,10 +62,10 @@ function Signup() {
                   type="text"
                   placeholder="Enter your fullname"
                   className="px-3 py-1 border rounded-md outline-none w-80"
-                  {...register("name", { required: true })}
+                  {...register("fullname", { required: true })}
                 />
                 <br />
-                {errors.name && (
+                {errors.fullname && (
                   <span className="text-sm text-red-500">
                     This field is required
                   </span>
@@ -60,7 +90,7 @@ function Signup() {
               </div>
               {/* Password */}
               <div className="mt-4 space-y-2">
-                <span>Email</span>
+                <span>Password</span>
                 <br />
                 <input
                   type="password"
@@ -74,25 +104,25 @@ function Signup() {
                     This field is required
                   </span>
                 )}
-                <div className="flex justify-around mt-4">
-                  <button className="px-3 py-1 text-white duration-200 bg-pink-500 rounded-md hover:bg-pink-700">
-                    Singup
-                  </button>
-                  <p className="text-xl">
-                    Have account?{" "}
-                    <button
-                      className="text-blue-500 underline cursor-pointer"
-                      onClick={() => {
-                        document.getElementById("my_modal_3").showModal();
-                      }}
-                    >
-                      Login
-                    </button>
-                    <Login />
-                  </p>
-                </div>
+              </div>
+              <div className="flex justify-around mt-4">
+                <button className="px-3 py-1 text-white duration-200 bg-pink-500 rounded-md hover:bg-pink-700">
+                  Signup
+                </button>
               </div>
             </form>
+            <div className="mt-4 text-xl">
+              Have an account?{" "}
+              <button
+                className="text-blue-500 underline cursor-pointer"
+                onClick={() => {
+                  document.getElementById("my_modal_3").showModal();
+                }}
+              >
+                Login
+              </button>
+              <Login />
+            </div>
           </div>
         </div>
       </div>
