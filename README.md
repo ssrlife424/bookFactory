@@ -14,7 +14,7 @@ Book Details: View detailed information about each book, including author, summa
 Favorites: Add books to your favorites list for quick access.
 
 🛠️ Technologies Used
-Frontend: React, Tailwind CSS, DaisyUI
+Frontend: React, Tailwind CSS, DaisyUI, MongoDb,
 
 State Management: React Context API
 
@@ -28,7 +28,7 @@ Clone the repository:
 bash
 
 
-git clone https://github.com/your-username/bookstore-app.git
+git clone https://github.com/your-username/bookFactory.git
 Navigate to the project directory:
 
 bash
