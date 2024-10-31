@@ -34,7 +34,7 @@ Navigate to the project directory:
 bash
 
 
-cd bookstore-app
+cd bookFactory
 Install dependencies:
 
 bash
